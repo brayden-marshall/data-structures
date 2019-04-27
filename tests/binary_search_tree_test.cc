@@ -1,14 +1,12 @@
 #include "catch.h"
-#include "../src/bst.h"
+#include "../src/binary_search_tree.h"
 
-TEST_CASE("Testing BST with only keys (no value)") {
-    BST<int>* tree1 = new BST<int>();
-    for (int i = 0; i < 100; i++) {
-        tree1->insert(i);
-    }
-    delete tree1;
+#include <iostream>
+
+TEST_CASE("Testing Binary Search Tree (BST) with int") {
     BST<int> tree;
 
+    // testing insert
     tree.insert(5);
     tree.insert(2);
     tree.insert(6);
@@ -55,4 +53,5 @@ TEST_CASE("Testing BST with only keys (no value)") {
             CHECK(!tree.contains(2));
         }
     }
+
 }

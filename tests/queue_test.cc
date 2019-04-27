@@ -1,8 +1,6 @@
 #include "catch.h"
 #include "../src/queue.h"
 
-#include <iostream>
-
 TEST_CASE("Testing Queue") {
     Queue<int> que;
     CHECK(que.size() == 0);

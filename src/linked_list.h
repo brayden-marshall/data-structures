@@ -2,7 +2,9 @@
 #define LINKED_LIST_H
 
 #include <string>
-#include <cassert>
+#include <stdexcept>
+#include <memory> // for unique_ptr
+#include <iostream>
 
 /* generic singly-linked list implementation
  * operations:
@@ -12,26 +14,23 @@
  *   back() - O(1)
  *   push_back() - O(1)
  *   push_front() - O(1)
- *   pop_back() - O(N)
- *      - pop_back is O(N) due to the singly-linked implementation
  *   pop_front() - O(1)
  *   remove(data) - O(N)
  *   clear() - O(N)
- *
  */
+
 template <typename T>
 class LinkedList {
     protected:
         struct Node {
             T data;
-            Node* next;
+            std::unique_ptr<Node> next;
             Node(const T &data, Node* next = nullptr) : data(data), next(next)
             {
             }
         };
 
-
-        Node* m_head;
+        std::unique_ptr<Node> m_head;
         Node* m_tail;
         int m_size;
 
@@ -40,132 +39,122 @@ class LinkedList {
         }
 
         ~LinkedList() {
-            this->clear();
         }
 
         // interface methods
-        bool isEmpty() const { return this->m_size == 0; }
+        bool isEmpty() const;
+        int size() const;
+        T front() const;
+        T back() const;
+        void push_back(const T&);
+        void push_front(const T&);
+        T pop_front();
+        void remove(T);
+        void clear();
 
-        int size() const { return this->m_size; }
-
-        T front() const {
-            if (this->isEmpty()) {
-                throw "EXCEPTION: front() called on empty list.";
-            }
-            return m_head->data;
-        }
-
-        T back() const {
-            if (this->isEmpty()) {
-                throw "EXCEPTION: back() called on empty list.";
-            }
-            return m_tail->data;
-        }
-
-        void push_back(const T &data) {
-            Node *new_node = new Node(data);
-            if (this->isEmpty()) {
-                m_head = new_node;
-                m_tail = new_node;
-            } else {
-                m_tail->next = new_node;
-                m_tail = new_node;
-            }
-            m_size++;
-        }
-
-        void push_front(const T &data) {
-            m_head = new Node(data, m_head);
-            if (m_tail == nullptr) {
-                m_tail = m_head;
-            }
-            m_size++;
-        }
-
-        T pop_back() {
-            // back() takes care of empty list case
-            T data = back();
-
-            if (m_size == 1) {
-                delete m_head;
-                m_head = m_tail = nullptr;
-            } else {
-                Node* current_node = m_head;
-                while (current_node->next != m_tail) {
-                    current_node = current_node->next;
-                }
-                delete m_tail;
-                m_tail = current_node;
-                m_tail->next = nullptr;
-            }
-            m_size--;
-            return data;
-        }
-
-        T pop_front() {
-            T data = this->front();
-            // need a temp pointer to head for memory deallocation
-            Node* temp_node = m_head;
-            m_head = m_head->next;
-            delete temp_node;
-
-            m_size--; 
-            return data;
-        }
-
-        void remove(T data) {
-            if (this->isEmpty()) {
-                throw "EXCEPTION: remove on empty list.";
-            }
-
-            // shortcut to handle case of size == 1
-            if (m_head->data == data) {
-                pop_front();
-                return;
-            }
-
-            Node* current_node = m_head;
-            while (current_node->next != nullptr) {
-                // if next node matches function argument, remove that node
-                if (current_node->next->data == data) {
-                    // need a temp pointer to deallocate memory after moving next pointers
-                    Node* temp_ptr = current_node;
-                    current_node->next = current_node->next->next;
-                    delete current_node;
-                }
-                current_node = current_node->next;
-            }
-            m_size--;
-        }
-
-        void clear() {
-            // loop through, and delete, every node
-            while (m_head != nullptr) {
-                Node* temp = m_head;
-                m_head = m_head->next;
-                delete temp;
-            }
-
-            // reset list to an empty state
-            m_head = nullptr;
-            m_tail = nullptr;
-            m_size = 0;
-        }
-
-        // overloaded operators
-        friend std::ostream& operator<<(std::ostream &out, const LinkedList &list) {
+        friend std::ostream& operator<<(std::ostream &out, const LinkedList<T>& list) {
             out << "[";
-            Node* current_node = list.m_head;
+            Node* current_node = list.m_head.get();
             while (current_node != nullptr) {
                 out << current_node->data;
                 if (current_node->next != nullptr) {
                     out << ", ";
                 }
-                current_node = current_node->next;
+                current_node = current_node->next.get();
             }
             out << "]";
             return out;
         }
 };
+
+template <typename T>
+bool LinkedList<T>::isEmpty() const { 
+    return this->m_size == 0;
+}
+
+template <typename T>
+int LinkedList<T>::size() const {
+    return this->m_size;
+}
+
+template <typename T>
+T LinkedList<T>::front() const {
+    if (this->isEmpty()) {
+        throw std::runtime_error("Cannot get front of an empty list");
+    }
+    return m_head->data;
+}
+
+template <typename T>
+T LinkedList<T>::back() const {
+    if (this->isEmpty()) {
+        throw std::runtime_error("Cannot get back of an empty list");
+    }
+    return m_tail->data;
+}
+
+template <typename T>
+void LinkedList<T>::push_back(const T& data) {
+    if (this->isEmpty()) {
+        m_head = std::make_unique<Node>(data);
+        m_tail = m_head.get();
+    } else {
+        m_tail->next = std::make_unique<Node>(data);
+        m_tail = m_tail->next.get();
+    }
+    m_size++;
+}
+
+template <typename T>
+void LinkedList<T>::push_front(const T &data) {
+
+    auto temp = std::move(m_head);
+    m_head = std::make_unique<Node>(data);
+    m_head->next = std::move(temp);
+
+    if (m_tail == nullptr) {
+        m_tail = m_head.get();
+    }
+    m_size++;
+}
+
+template <typename T>
+T LinkedList<T>::pop_front() {
+    T data = this->front();
+    m_head = std::move(m_head->next);
+
+    m_size--; 
+    return data;
+}
+
+template <typename T>
+void LinkedList<T>::remove(T data) {
+    if (this->isEmpty()) {
+        throw std::runtime_error("Cannot remove from empty list.");
+    }
+
+    // shortcut to handle case of size == 1
+    if (m_head->data == data) {
+        pop_front();
+        return;
+    }
+
+    Node* current_node = m_head.get();
+    while (current_node->next != nullptr) {
+        // if next node matches function argument, remove that node
+        if (current_node->next->data == data) {
+            current_node->next = std::move(current_node->next->next);
+        }
+        current_node = current_node->next.get();
+    }
+    m_size--;
+}
+
+template <typename T>
+void LinkedList<T>::clear() {
+    m_head = nullptr;
+    m_tail = nullptr;
+    m_size = 0;
+}
 
 #endif
