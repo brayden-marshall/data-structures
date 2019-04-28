@@ -22,7 +22,7 @@ test_files = []
 for dir in test_dirs:
     for file in os.listdir(dir):
         if file[len(file)-7:len(file)] == "test.cc":
-            test_files.append(file)
+            test_files.append(f"./{dir}/{file}")
 
 # if bin directory doesn't exist, create it
 if not os.path.exists("bin/"):
@@ -35,8 +35,8 @@ compile_command = "g++ -o bin/test bin/test_driver.o "
 if args.omit:
     test_files = [x for x in test_files if not x in args.omit]
 
-for file in test_files:
-    compile_command += f"tests/{file} "
+for file_path in test_files:
+    compile_command += f"{file_path} "
 
 # compiling test files
 compile_exit_code = os.system(compile_command)

@@ -1,5 +1,5 @@
-#include "catch.h"
-#include "../src/linked_list.h"
+#include "../catch.h"
+#include "../../src/linked_list.h"
 
 TEMPLATE_TEST_CASE("Testing Stack with int", "[stack][adt]", LinkedList<int>) {
     TestType stack_;
