@@ -14,7 +14,7 @@
  * Head pointer owns the first node
  * Tail does not own the node it points to
  * Operations:
- *   isEmpty() - O(1)
+ *   is_empty() - O(1)
  *   size() - O(1)
  *   front() - O(1)
  *   back() - O(1)
@@ -50,7 +50,7 @@ class LinkedList : public virtual IList<T>,
         }
 
         // interface methods
-        virtual bool isEmpty() const override;
+        virtual bool is_empty() const override;
         virtual int size() const override;
         virtual T front() const override;
         virtual T back() const override;
@@ -99,7 +99,7 @@ class LinkedList : public virtual IList<T>,
 };
 
 template <typename T>
-bool LinkedList<T>::isEmpty() const { 
+bool LinkedList<T>::is_empty() const { 
     return this->m_size == 0;
 }
 
@@ -110,7 +110,7 @@ int LinkedList<T>::size() const {
 
 template <typename T>
 T LinkedList<T>::front() const {
-    if (this->isEmpty()) {
+    if (this->is_empty()) {
         throw std::runtime_error("Cannot get front of an empty list");
     }
     return m_head->data;
@@ -118,7 +118,7 @@ T LinkedList<T>::front() const {
 
 template <typename T>
 T LinkedList<T>::back() const {
-    if (this->isEmpty()) {
+    if (this->is_empty()) {
         throw std::runtime_error("Cannot get back of an empty list");
     }
     return m_tail->data;
@@ -140,7 +140,7 @@ T LinkedList<T>::get_at(const int index) const {
 
 template <typename T>
 void LinkedList<T>::push_back(const T& data) {
-    if (this->isEmpty()) {
+    if (this->is_empty()) {
         m_head = std::make_unique<Node>(data);
         m_tail = m_head.get();
     } else {
@@ -174,7 +174,7 @@ T LinkedList<T>::pop_front() {
 
 template <typename T>
 void LinkedList<T>::remove(const T& data) {
-    if (this->isEmpty()) {
+    if (this->is_empty()) {
         throw std::runtime_error("Cannot remove from empty list.");
     }
 

@@ -29,7 +29,7 @@ if not os.path.exists("bin/"):
     os.makedirs("bin/")
 
 # building the compile command with all test files and pre-compiled test_driver
-compile_command = "g++ -o bin/test bin/test_driver.o "
+compile_command = "g++ -Wall -Wpedantic -o bin/test bin/test_driver.o "
 
 # filter out files specified in args.omit
 if args.omit:

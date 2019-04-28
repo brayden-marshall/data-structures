@@ -24,14 +24,15 @@ TEST_CASE("Testing Binary Search Tree (BST) with int") {
         REQUIRE(tree.contains(3));
         REQUIRE(tree.contains(4));
         REQUIRE(tree.contains(0));
-        // tree should look like
-        //          5
-        //         / \
-        //        2   6
-        //       / \
-        //      1   3
-        //     /     \
-        //    0       4
+        /* tree should look like
+         *          5
+         *         / \
+         *        2   6
+         *       / \
+         *      1   3
+         *     /     \
+         *    0       4
+         */
 
         SECTION("Removing node with zero children") {
             tree.remove(6);

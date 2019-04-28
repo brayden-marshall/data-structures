@@ -7,14 +7,14 @@ TEMPLATE_TEST_CASE("Testing List with int", "[list][adt]", LinkedList<int>) {
 
 
     CHECK(list->size() == 0);
-    CHECK(list->isEmpty());
+    CHECK(list->is_empty());
 
     // testing push methods
     list->push_back(1);
     list->push_front(2);
 
     CHECK(list->size() == 2);
-    CHECK(! list->isEmpty());
+    CHECK(! list->is_empty());
     CHECK(list->front() == 2);
     CHECK(list->back() == 1);
 
@@ -22,7 +22,7 @@ TEMPLATE_TEST_CASE("Testing List with int", "[list][adt]", LinkedList<int>) {
     list->remove(2);
 
     CHECK(list->size() == 1);
-    CHECK(! list->isEmpty());
+    CHECK(! list->is_empty());
     CHECK(list->front() == list->back());
     CHECK(list->front() == 1);
 

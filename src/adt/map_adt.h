@@ -6,10 +6,10 @@ class IMap {
     public:
         virtual ~IMap() {}
 
-        virtual void set(const K& data) = 0;
-        virtual V remove(const K& data) = 0;
-        virtual const V& find(const K& data) const = 0;
-        virtual bool isEmpty() const = 0;
+        virtual void set(const K&, const V&) = 0;
+        virtual V remove(const K&) = 0;
+        virtual const V& at(const K&) const = 0;
+        virtual bool is_empty() const = 0;
         virtual int size() const = 0;
 };
 

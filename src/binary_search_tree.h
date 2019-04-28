@@ -10,10 +10,10 @@
 template <typename K>
 class Node {
     public:
+        K key;
+        Node<K>* parent;
         std::unique_ptr<Node<K>> left;
         std::unique_ptr<Node<K>> right;
-        Node<K>* parent;
-        K key;
         Node(const K& key, Node<K>* parent=nullptr) 
             : key(key), parent(parent), left(nullptr), right(nullptr)
         {
