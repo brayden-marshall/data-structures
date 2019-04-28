@@ -17,8 +17,12 @@ parser.add_argument("-o", "--omit",
 args = parser.parse_args()
 
 # getting all test files
-test_dir = "./tests"
-test_files = [f for f in os.listdir(test_dir) if f[len(f)-7:len(f)] == "test.cc"]
+test_dirs = ["./tests", "./tests/adt"]
+test_files = []
+for dir in test_dirs:
+    for file in os.listdir(dir):
+        if file[len(file)-7:len(file)] == "test.cc":
+            test_files.append(file)
 
 # if bin directory doesn't exist, create it
 if not os.path.exists("bin/"):

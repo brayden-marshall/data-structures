@@ -2,7 +2,6 @@
 #define BINARY_SEARCH_TREE_H
 
 #include <memory> // for unique_ptr
-#include <iostream>
 
 /* Node class used in Binary Search Tree implementation
  * Each parent node uniquely owns it's children
@@ -70,7 +69,7 @@ void BST<K>::bst_insert(const K& key, Node<K>* node) {
     }
 }
 
-/* Private recursive function that finds a node that matches a given key
+/* Private recursive function that finds a node that matches a given key.
  * Time Complexity:
  *   O(logN) (binary search)
  * Returns:
@@ -93,7 +92,7 @@ Node<K>* BST<K>::bst_find(const K &key, Node<K>* node) const {
     return bst_find(key, node->right.get());
 }
 
-/* Private, recursive helper function that removes a node matching a given key
+/* Private, recursive helper function that removes a node matching a given key.
  * Time Complexity:
  *   O(logN) for bst_find operation + O(1) for removal
  *   O(logN) overall
@@ -118,7 +117,8 @@ void BST<K>::bst_remove(const K& key, Node<K>* node) {
     }
 }
 
-/* Private helper function to assist bst_remove
+/* Private helper function to assist bst_remove.
+ * Replaces a node with it's child, and updates all affected pointers
  * Args:
  *   node:
  *     A Node to be removed which has 0 or 1 children

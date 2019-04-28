@@ -4,10 +4,16 @@
 #include <string>
 #include <stdexcept>
 #include <memory> // for unique_ptr
-#include <iostream>
 
-/* generic singly-linked list implementation
- * operations:
+#include "adt/stack_adt.h"
+#include "adt/queue_adt.h"
+#include "adt/list_adt.h"
+
+/* Generic singly-linked list implementation
+ * Every node is owned by the node behind it
+ * Head pointer owns the first node
+ * Tail does not own the node it points to
+ * Operations:
  *   isEmpty() - O(1)
  *   size() - O(1)
  *   front() - O(1)
@@ -20,7 +26,9 @@
  */
 
 template <typename T>
-class LinkedList {
+class LinkedList : public virtual IList<T>,
+                   public virtual IStack<T>,
+                   public virtual IQueue<T> {
     protected:
         struct Node {
             T data;
@@ -38,19 +46,42 @@ class LinkedList {
         LinkedList() : m_head(nullptr), m_tail(nullptr), m_size(0) {
         }
 
-        ~LinkedList() {
+        virtual ~LinkedList() {
         }
 
         // interface methods
-        bool isEmpty() const;
-        int size() const;
-        T front() const;
-        T back() const;
+        virtual bool isEmpty() const override;
+        virtual int size() const override;
+        virtual T front() const override;
+        virtual T back() const override;
+        virtual T get_at(const int index) const override;
+        virtual void remove(const T&) override;
+        virtual void clear() override;
         void push_back(const T&);
         void push_front(const T&);
         T pop_front();
-        void remove(T);
-        void clear();
+
+        // Stack ADT methods
+        virtual void push(const T& data) override {
+            this->push_front(data);    
+        }
+
+        virtual T pop() override {
+            return this->pop_front();
+        }
+
+        virtual T peek() const override {
+            return this->front();
+        }
+
+        // Queue ADT methods
+        virtual void enque(const T& data) override {
+            return this->push_back(data);
+        }
+
+        virtual T deque() override {
+            return this->pop_front();
+        }
 
         friend std::ostream& operator<<(std::ostream &out, const LinkedList<T>& list) {
             out << "[";
@@ -94,6 +125,20 @@ T LinkedList<T>::back() const {
 }
 
 template <typename T>
+T LinkedList<T>::get_at(const int index) const {
+    // bounds check
+    if (index < 0 || index >= m_size) {
+        throw std::runtime_error("Index out of bounds");
+    }
+
+    Node* current = m_head.get();
+    for (int i = 0; i < index; i++) {
+        current = current->next.get();
+    }
+    return current->data;
+}
+
+template <typename T>
 void LinkedList<T>::push_back(const T& data) {
     if (this->isEmpty()) {
         m_head = std::make_unique<Node>(data);
@@ -128,7 +173,7 @@ T LinkedList<T>::pop_front() {
 }
 
 template <typename T>
-void LinkedList<T>::remove(T data) {
+void LinkedList<T>::remove(const T& data) {
     if (this->isEmpty()) {
         throw std::runtime_error("Cannot remove from empty list.");
     }
