@@ -22,7 +22,7 @@ test_files = []
 for dir in test_dirs:
     for file in os.listdir(dir):
         if file[len(file)-7:len(file)] == "test.cc":
-            test_files.append(f"./{dir}/{file}")
+            test_files.append(f"{dir}/{file}")
 
 # if bin directory doesn't exist, create it
 if not os.path.exists("bin/"):
@@ -38,6 +38,7 @@ if args.omit:
 for file_path in test_files:
     compile_command += f"{file_path} "
 
+print(f"Compiling with: {compile_command}")
 # compiling test files
 compile_exit_code = os.system(compile_command)
 

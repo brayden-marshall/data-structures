@@ -2,7 +2,7 @@
 #define BINARY_HEAP_H
 
 #include <vector>
-#include <memory> // for unique_ptr and make_unique
+#include <cassert>
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
@@ -25,11 +25,12 @@ class BinaryHeap : public virtual IPriorityQueue<T> {
 
         std::vector<Element> m_arr;
 
-        int parent_index(int index) const;
-        int left_child_index(int index) const;
-        int right_child_index(int index) const;
-        void sift_up(int child);
-        void sift_down(int parent);
+        int parent_index(int) const;
+        int left_child_index(int) const;
+        int right_child_index(int) const;
+        int min_child_index(int, int);
+        void sift_up(int);
+        void sift_down(int);
         void print() const;
 
     public:
@@ -78,23 +79,32 @@ void BinaryHeap<T>::sift_up(int child) {
     }
 }
 
+// assumes at least one of left and right is in bounds
+template <typename T>
+int BinaryHeap<T>::min_child_index(int left, int right) {
+    assert(left < size() || right < size());
+
+    if (left < size() && right < size()) {
+        return m_arr[left].priority > m_arr[right].priority
+            ? left : right;
+    } else if (right < size()) {
+        return right;
+    } else {
+        return left;
+    }
+}
+
 template <typename T>
 void BinaryHeap<T>::sift_down(int parent) {
     int left_child = left_child_index(parent);
     int right_child = right_child_index(parent);
-    int largest_child = parent;
 
-    // this block get's parent's largest_child, with bounds checking
-    if (left_child < size() && right_child < size()) {
-        largest_child = m_arr[left_child].priority > m_arr[right_child].priority
-            ? left_child : right_child;
-    } else if (right_child < size()) {
-        largest_child = right_child;
-    } else if (left_child < size()) {
-        largest_child = left_child;
-    } else {
+    // base case, parent has no children
+    if (left_child >= size() && right_child > size()) {
         return;
     }
+
+    int largest_child = min_child_index(left_child, right_child);
 
     if (m_arr[parent].priority < m_arr[largest_child].priority) {
         std::swap(m_arr[parent], m_arr[largest_child]);

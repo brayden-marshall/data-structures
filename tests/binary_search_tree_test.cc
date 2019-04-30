@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-TEST_CASE("Testing Binary Search Tree (BST) with int") {
+TEST_CASE("Testing Binary Search Tree (BST) with int, keys only") {
     BST<int> tree;
 
     // testing insert
@@ -52,6 +52,11 @@ TEST_CASE("Testing Binary Search Tree (BST) with int") {
         SECTION("Removing node with two children") {
             tree.remove(2);
             CHECK(!tree.contains(2));
+        }
+
+        SECTION("Removing root") {
+            tree.remove(5);
+            CHECK(!tree.contains(5));
         }
     }
 
