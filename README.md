@@ -2,6 +2,7 @@
 
 ## Todo
 
+- Add key/value support in binary search tree so it can implement map adt, and be used to create avl tree and red-black tree classes
 - Create a Makefile setup for running tests/benchmarks, compiling, etc.
 - Learn what Makefile is
 
