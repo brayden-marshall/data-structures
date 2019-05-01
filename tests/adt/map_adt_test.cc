@@ -3,8 +3,10 @@
 #include "../catch.h"
 #include "../../src/adt/map_adt.h"
 #include "../../src/binary_search_tree.h"
+#include "../../src/avl_tree.h"
 
-TEMPLATE_TEST_CASE("Testing Map with int, string", "[map][adt]", (BST<int, std::string>)) {
+TEMPLATE_TEST_CASE("Testing Map with int, string", "[map][adt]",
+                  (BST<int, std::string>), (AVLTree<int, std::string>)) {
     TestType map_;
     IMap<int, std::string>* map = &map_;
 

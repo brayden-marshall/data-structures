@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "adt/map_adt.h"
+#include "adt/set_adt.h"
 
 /* Binary Search Tree implementation
  * This is a basic binary search tree that does not self-balance
@@ -13,7 +14,8 @@
  * trees
  */
 template <typename K, typename V=K>
-class BST : public virtual IMap<K, V> {
+class BST : public virtual IMap<K, V>,
+            public virtual ISet<K> {
     protected:
         /* Each parent node uniquely owns it's children
          * Node's parent pointers are observers and do not own anything
@@ -51,16 +53,16 @@ class BST : public virtual IMap<K, V> {
         virtual ~BST() {}
 
         // standard BST operations
-        virtual bool contains(const K&) const override;
-        void insert(const K&);
-        void insert(const K&, const V&);
-        virtual void remove(const K&) override;
+        bool contains(const K&) const override;
+        virtual void insert(const K&);
+        virtual void insert(const K&, const V&);
+        void remove(const K&) override;
 
         // IMap ADT wrapppers
-        virtual void set(const K& key, const V& val) override;
-        virtual const V& at(const K& key) const override;
-        virtual bool is_empty() const;
-        virtual int size() const;
+        void set(const K& key, const V& val) override;
+        const V& at(const K& key) const override;
+        bool is_empty() const;
+        int size() const;
 };
 
 /********************
