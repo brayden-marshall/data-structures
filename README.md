@@ -37,9 +37,10 @@ Tests are run through a `Makefile`, with the commands:
 The Naming Conventions used in this repository are as follows:
 
 ### Code:
-- Variable and function names use snake_case: (get_at, start_index)
-- All container names use PascalCase: (LinkedList, HashMap)
-- Abstract Data Type containers are prefixed with a capital 'I'(i): (IList, IMap)
+- Variable and function names use snake_case: (`get_at`, `start_index`)
+- All container names use PascalCase: (`LinkedList`, `HashMap`)
+- Abstract Data Type containers are prefixed with a capital 'I'(i): (`IList`, `IMap`)
+- Class member variables are named with a trailing underscore (`head_`, `size_`) (except for nested classes at the moment)
 
 ### Files:
 - All header files use the extension `.h`
@@ -51,4 +52,3 @@ The Naming Conventions used in this repository are as follows:
 ## TODO
 
 - Go through exception usage and replace with more appropriate types (all are currently `std::runtime_error`)
-- Resolving naming inconsistencies between `m_{member_name}` and `{member_name}_` for class member variables

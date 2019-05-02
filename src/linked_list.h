@@ -38,12 +38,12 @@ class LinkedList : public virtual IList<T>,
             }
         };
 
-        std::unique_ptr<Node> m_head;
-        Node* m_tail;
-        int m_size;
+        std::unique_ptr<Node> head_;
+        Node* tail_;
+        int size_;
 
     public:
-        LinkedList() : m_head(nullptr), m_tail(nullptr), m_size(0) {
+        LinkedList() : head_(nullptr), tail_(nullptr), size_(0) {
         }
 
         virtual ~LinkedList() {
@@ -85,7 +85,7 @@ class LinkedList : public virtual IList<T>,
 
         friend std::ostream& operator<<(std::ostream &out, const LinkedList<T>& list) {
             out << "[";
-            Node* current_node = list.m_head.get();
+            Node* current_node = list.head_.get();
             while (current_node != nullptr) {
                 out << current_node->data;
                 if (current_node->next != nullptr) {
@@ -100,12 +100,12 @@ class LinkedList : public virtual IList<T>,
 
 template <typename T>
 bool LinkedList<T>::is_empty() const { 
-    return this->m_size == 0;
+    return this->size_ == 0;
 }
 
 template <typename T>
 int LinkedList<T>::size() const {
-    return this->m_size;
+    return this->size_;
 }
 
 template <typename T>
@@ -113,7 +113,7 @@ T LinkedList<T>::front() const {
     if (this->is_empty()) {
         throw std::runtime_error("Cannot get front of an empty list");
     }
-    return m_head->data;
+    return head_->data;
 }
 
 template <typename T>
@@ -121,17 +121,17 @@ T LinkedList<T>::back() const {
     if (this->is_empty()) {
         throw std::runtime_error("Cannot get back of an empty list");
     }
-    return m_tail->data;
+    return tail_->data;
 }
 
 template <typename T>
 T LinkedList<T>::get_at(const int index) const {
     // bounds check
-    if (index < 0 || index >= m_size) {
+    if (index < 0 || index >= size_) {
         throw std::runtime_error("Index out of bounds");
     }
 
-    Node* current = m_head.get();
+    Node* current = head_.get();
     for (int i = 0; i < index; i++) {
         current = current->next.get();
     }
@@ -141,34 +141,34 @@ T LinkedList<T>::get_at(const int index) const {
 template <typename T>
 void LinkedList<T>::push_back(const T& data) {
     if (this->is_empty()) {
-        m_head = std::make_unique<Node>(data);
-        m_tail = m_head.get();
+        head_ = std::make_unique<Node>(data);
+        tail_ = head_.get();
     } else {
-        m_tail->next = std::make_unique<Node>(data);
-        m_tail = m_tail->next.get();
+        tail_->next = std::make_unique<Node>(data);
+        tail_ = tail_->next.get();
     }
-    m_size++;
+    size_++;
 }
 
 template <typename T>
 void LinkedList<T>::push_front(const T &data) {
 
-    auto temp = std::move(m_head);
-    m_head = std::make_unique<Node>(data);
-    m_head->next = std::move(temp);
+    auto temp = std::move(head_);
+    head_ = std::make_unique<Node>(data);
+    head_->next = std::move(temp);
 
-    if (m_tail == nullptr) {
-        m_tail = m_head.get();
+    if (tail_ == nullptr) {
+        tail_ = head_.get();
     }
-    m_size++;
+    size_++;
 }
 
 template <typename T>
 T LinkedList<T>::pop_front() {
     T data = this->front();
-    m_head = std::move(m_head->next);
+    head_ = std::move(head_->next);
 
-    m_size--; 
+    size_--; 
     return data;
 }
 
@@ -179,12 +179,12 @@ void LinkedList<T>::remove(const T& data) {
     }
 
     // shortcut to handle case of size == 1
-    if (m_head->data == data) {
+    if (head_->data == data) {
         pop_front();
         return;
     }
 
-    Node* current_node = m_head.get();
+    Node* current_node = head_.get();
     while (current_node->next != nullptr) {
         // if next node matches function argument, remove that node
         if (current_node->next->data == data) {
@@ -192,14 +192,14 @@ void LinkedList<T>::remove(const T& data) {
         }
         current_node = current_node->next.get();
     }
-    m_size--;
+    size_--;
 }
 
 template <typename T>
 void LinkedList<T>::clear() {
-    m_head = nullptr;
-    m_tail = nullptr;
-    m_size = 0;
+    head_ = nullptr;
+    tail_ = nullptr;
+    size_ = 0;
 }
 
 #endif

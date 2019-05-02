@@ -23,7 +23,7 @@ class BinaryHeap : public virtual IPriorityQueue<T> {
             }
         };
 
-        std::vector<Element> m_arr;
+        std::vector<Element> arr_;
 
         int parent_index(int) const;
         int left_child_index(int) const;
@@ -73,8 +73,8 @@ void BinaryHeap<T>::sift_up(int child) {
     }
 
     // if child's priority is larger than parent's, swap them and sift up
-    if (m_arr[child].priority > m_arr[parent].priority) {
-        std::swap(m_arr[child], m_arr[parent]);
+    if (arr_[child].priority > arr_[parent].priority) {
+        std::swap(arr_[child], arr_[parent]);
         sift_up(parent);
     }
 }
@@ -85,7 +85,7 @@ int BinaryHeap<T>::min_child_index(int left, int right) {
     assert(left < size() || right < size());
 
     if (left < size() && right < size()) {
-        return m_arr[left].priority > m_arr[right].priority
+        return arr_[left].priority > arr_[right].priority
             ? left : right;
     } else if (right < size()) {
         return right;
@@ -106,8 +106,8 @@ void BinaryHeap<T>::sift_down(int parent) {
 
     int largest_child = min_child_index(left_child, right_child);
 
-    if (m_arr[parent].priority < m_arr[largest_child].priority) {
-        std::swap(m_arr[parent], m_arr[largest_child]);
+    if (arr_[parent].priority < arr_[largest_child].priority) {
+        std::swap(arr_[parent], arr_[largest_child]);
         sift_down(largest_child);
     }
 }
@@ -115,7 +115,7 @@ void BinaryHeap<T>::sift_down(int parent) {
 // debug function that prints values of the underlying vector
 template <typename T>
 void BinaryHeap<T>::print() const {
-    for (auto val : m_arr) {
+    for (auto val : arr_) {
         std::cout << val.data << "->" << val.priority << std::endl;
     }
     std::cout << "**********************\n";
@@ -126,8 +126,8 @@ void BinaryHeap<T>::print() const {
  **************************/
 template<typename T>
 void BinaryHeap<T>::push(const T& data, int priority) {
-    m_arr.push_back(Element(data, priority));
-    sift_up(m_arr.size()-1);
+    arr_.push_back(Element(data, priority));
+    sift_up(arr_.size()-1);
 }
 
 // throws an exception when called on an empty heap
@@ -135,8 +135,8 @@ template<typename T>
 T BinaryHeap<T>::pop() {
     T data = peek();
 
-    m_arr[0] = m_arr.back();
-    m_arr.pop_back();
+    arr_[0] = arr_.back();
+    arr_.pop_back();
 
     sift_down(0);
     return data;
@@ -148,17 +148,17 @@ T BinaryHeap<T>::peek() const {
     if (is_empty()) {
         throw std::runtime_error("Cannot pop from empty heap");
     }
-    return m_arr.front().data;
+    return arr_.front().data;
 }
 
 template<typename T>
 bool BinaryHeap<T>::is_empty() const {
-    return m_arr.empty();
+    return arr_.empty();
 }
 
 template<typename T>
 int BinaryHeap<T>::size() const {
-    return m_arr.size();
+    return arr_.size();
 }
 
 #endif
