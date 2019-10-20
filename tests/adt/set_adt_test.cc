@@ -1,9 +1,8 @@
 #include "../catch.h"
 #include "../../src/adt/set_adt.h"
 #include "../../src/binary_search_tree.h"
-#include "../../src/avl_tree.h"
 
-TEMPLATE_TEST_CASE("Testing set ADT with int", "[adt][set]", BST<int>, AVLTree<int>) {
+TEMPLATE_TEST_CASE("Testing set ADT with int", "[adt][set]", BST<int>) {
     TestType tree;
     ISet<int>* set = &tree;
     REQUIRE(set->is_empty());
